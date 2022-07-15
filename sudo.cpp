@@ -4,12 +4,13 @@
 #include <string>
 #include <filesystem>
 #include <algorithm>
+#include <fstream>
 using namespace std;
 
 void usage() {
     printf("Usage: sudo -i, sudo -u (user) -Z (context) -c (command) -s /path/to/su -a -mm\n");
     printf("-i - Login to shell\n");
-    printf("  Create symlink $PREFIX/bin/shell for setup default shell\n");
+    printf("  Write /data/data/com.termux/files/home/.shell for setup default shell\n");
     printf("-u (user) - switch to user\n");
     printf("-Z (context) - setup SELinux context\n");
     printf("-c (command) - run command\n");
@@ -32,13 +33,13 @@ int main(int argc, char *argv[]) {
         if (it != args.end()) {
             usage();
         } else {
-            bool login;
-            int userpos;
-            int conpos;
-            int compos;
-            bool gms;
-            bool android;
-            int supos;
+            bool login = false;
+            int userpos = -1;
+            int conpos = -1;
+            int compos = -1;
+            bool gms = false;
+            bool android = false;
+            int supos = -1;
             string command;
             it = find(args.begin(), args.end(), "-i");
             if (it != args.end()) {
@@ -107,10 +108,15 @@ int main(int argc, char *argv[]) {
             if (compos > -1) {
                 command += args[compos + 1];
             } else if (login) {
-                if (!android) {
-                    const bool ifext = std::__fs::filesystem::exists("/data/data/com.termux/files/usr/bin/shell");
+                if (android == false) {
+                    const bool ifext = std::__fs::filesystem::exists("/data/data/com.termux/files/home/.shell");
                     if (ifext) {
-                        command += "/data/data/com.termux/files/usr/bin/shell";
+                        string shstr;
+                        ifstream sudoif;
+                        sudoif.open("/data/data/com.termux/files/home/.shell", ios::in);
+                        sudoif >> shstr;
+                        sudoif.close();
+                        command += shstr;
                     } else {
                         command += "/data/data/com.termux/files/usr/bin/bash";
                     }
