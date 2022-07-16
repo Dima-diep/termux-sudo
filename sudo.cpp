@@ -121,6 +121,7 @@ int main(int argc, char *argv[]) {
                         command += "/data/data/com.termux/files/usr/bin/bash";
                     }
                 } else {
+                    unsetenv("LD_PRELOAD");
                     command += "/system/bin/sh";
                 }
             }
