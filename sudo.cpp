@@ -14,7 +14,7 @@ void usage() {
     printf("-u (user) - switch to user\n");
     printf("-Z (context) - setup SELinux context\n");
     printf("-c (command) - run command\n");
-    printf("-a - Force use Android nevironment instead of Termux\n");
+    printf("-a - Force use Android environment instead of Termux\n");
     printf("-mm - Force run in global mount namespace\n");
     printf("-h - print this help menu\n");
     printf("-s /path/to/su - path to su instead of /sbin/su\n");
